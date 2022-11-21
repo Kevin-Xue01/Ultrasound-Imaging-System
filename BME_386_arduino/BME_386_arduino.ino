@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------- //
 
 #define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
+#define trigPin 4 //attach pin D3 Arduino to pin Trig of HC-SR04
 
 // defines variables
 #include <TimerOne.h>
@@ -18,9 +18,15 @@ const int k = 512;
 int t = 25;
 const unsigned int MAX_MESSAGE_LENGTH = 12;
 int incomingByte = 0;
-
+int pulses_left = 0;
 void setup() {
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
   pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
   Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
@@ -62,7 +68,11 @@ void loop() {
    }
  }
   Timer1.initialize(t); // period    
+  Timer1.pwm(5, k);
+  Timer1.pwm(6, k);
   Timer1.pwm(9, k);
+  Timer1.pwm(10, k);
+  Timer1.pwm(11 , k);
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
