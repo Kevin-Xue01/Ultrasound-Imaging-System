@@ -11,27 +11,45 @@
 
 // defines variables
 #include <TimerOne.h>
+#include <PWM.h>
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
+const int interrupt_pin = 3;
+//const int pwm_pin = 9;
+volatile byte state = LOW;
 
 const int k = 512;
 int t = 25;
 const unsigned int MAX_MESSAGE_LENGTH = 12;
 int incomingByte = 0;
 int pulses_left = 0;
+int32_t frequency = 40000;
+
 void setup() {
-  pinMode(3, OUTPUT);
+//  InitTimersSafe();
+//  bool success = SetPinFrequencySafe(3, frequency);
+//  bool success1 = SetPinFrequencySafe(11, frequency);
+//  bool success2 = SetPinFrequencySafe(9, frequency);
+//  bool success3 = SetPinFrequencySafe(10, frequency);
+  
+  pinMode(interrupt_pin, INPUT_PULLUP);
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
-  pinMode(9, OUTPUT);
+  pinMode(7, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(interrupt_pin), manual_pwm, CHANGE);
   
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
   Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
   Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
   Serial.println("with Arduino UNO R3");
+//  Serial.println(success);
+//  Serial.println(success1);
+//  Serial.println(success2);
+//  Serial.println(success3);
 }
 void loop() {
   // Clears the trigPin condition
@@ -67,12 +85,24 @@ void loop() {
      message_pos = 0;
    }
  }
-  Timer1.initialize(t); // period    
-  Timer1.pwm(5, k);
-  Timer1.pwm(6, k);
+  Timer1.initialize(t); // period 
+//  pwmWrite(3, 128);
+//  pwmWrite(11, 128);
+//  pwmWrite(9, 128);
+//  pwmWrite(10, 128);  
+//  analogWrite(11, 1000); 
+//  analogWrite(3, 1000); 
+//  analogWrite(5, k); 
   Timer1.pwm(9, k);
-  Timer1.pwm(10, k);
-  Timer1.pwm(11 , k);
+//  Timer1.pwm(10, k);
+//  Timer1.pwm(11 , k);
+  digitalWrite(5, state);
+  digitalWrite(6, state);
+  digitalWrite(7, state);
+  digitalWrite(10, state);
+  digitalWrite(11, state);
+  digitalWrite(12, state);
+  
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
@@ -87,6 +117,11 @@ void loop() {
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
+}
+
+void manual_pwm(){
+  state = ~state;
+  Serial.println(state);
 }
 // Include the AccelStepper Library
 #include <AccelStepper.h>
