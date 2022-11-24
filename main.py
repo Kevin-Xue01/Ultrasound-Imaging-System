@@ -1,12 +1,7 @@
-def start_recording_video():
-    with_arduino = True
 
-    cap = cv2.VideoCapture(0)
-    database_controller = Database()
-    ser = None
-    if with_arduino:
-        ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=1)
-        ser.flush()
+def start_recording_video():
+    ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=1)
+    ser.flush()
     while True:
         (
             _,
