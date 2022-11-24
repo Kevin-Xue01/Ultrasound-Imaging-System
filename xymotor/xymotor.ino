@@ -45,6 +45,53 @@ void setup() {
   delay(1000);
 }
 
+// Trajectory 1, X-Main
+void trajectory1() {
+  for (int j = 0; j < y_max; j++) {
+     for (int i = 0; i < x_max; i++) {
+       printCoord(j % 2 == 1 ? x_max - i - 1 : i, j);
+       step(0, j % 2 == 1);
+     }
+     step(1, 0);
+   }
+}
+
+// Trajectory 2, Y-Main
+void trajectory2() {
+  for (int i = 0; i < x_max; i++) {
+    for (int j = 0; j < y_max; j++) {
+      printCoord(i, i % 2 == 1? y_max - j - 1 : j);
+      step(1, i % 2 == 1);
+    }
+    step(0, 0);
+  }
+}
+
+void reset() {
+  for (int i = 0; i < x_max; i++) {
+    Serial.println("Stepping x axis, (-) direction");
+    step(0, 1);
+  }
+  for (int j = 0; j < y_max; j++) {
+    Serial.println("Stepping y axis, (-) direction");
+    step(1, 1);
+  }
+}
+
+void xLine() {
+  for (int i = 0; i < x_max; i++) {
+    Serial.println("Stepping x axis, (+) direction");
+    step(0, 0);
+  }
+}
+
+void yLine() {
+  for (int j = 0; j < y_max; j++) {
+    Serial.println("Stepping y axis, (+) direction");
+    step(1, 0);
+  }
+}
+
 void loop() {
 //    Serial.println("Stepping x axis, (+) direction");
 //    step(0, 0);
@@ -62,22 +109,7 @@ void loop() {
 
   // Before running entire trajectory,
   // reset to Initial Positions First
-
-//    // Trajectory 1, X-Main
-//    for (int j = 0; j < y_max; j++) {
-//      for (int i = 0; i < x_max; i++) {
-//        printCoord(j % 2 == 1 ? x_max - i - 1 : i, j);
-//        step(0, j % 2 == 1);
-//      }
-//      step(1, 0);
-//    }
-
-  //  // Trajectory 2, Y-Main
-  //  for (int i = 0; i < x_max; i++) {
-  //    for (int j = 0; j < y_max; j++) {
-  //      printCoord(i, i % 2 == 1? y_max - j - 1 : j);
-  //      step(1, i % 2 == 1);
-  //    }
-  //    step(0, 0);
-  //  }
+  // trajectory1();
+  // trajectory2();
+  // reset();
 }
