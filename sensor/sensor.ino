@@ -1,13 +1,10 @@
+#include <TimerOne.h>
+//#include <PWM.h>
+
 #define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define trigPin 4 //attach pin D3 Arduino to pin Trig of HC-SR04
 
-#define PIN5 (1<< 5)
-#define PIN6 (1<< 6)
-#define PIN7 (1<< 7)
-
-// defines variables
-#include <TimerOne.h>
-//#include <PWM.h>
+// DEFINE VARIABLES
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
 const int interrupt_pin = 3;
@@ -20,6 +17,25 @@ int pulses_left = 0;
 int32_t frequency = 40000;
 
 unsigned char val = 0x00;
+
+
+#define CIRCLE_SIZE 16
+uint16_t circleData[CIRCLE_SIZE] = {0};
+uint16_t circlePointer = 0;
+uint32_t circleSum = 0;
+
+void updateRollingAverage(uint16_t value)
+{
+  circleSum = circleSum - circleData[circlePointer] + value;
+  circleData[circlePointer] = value;
+  circlePointer++;
+  if (circlePointer == CIRCLE_SIZE) circlePointer = 0;
+}
+
+uint16_t rollingAverage()
+{
+  return circleSum / CIRCLE_SIZE;
+}
 
 void setup() {
   TCNT2 = 0;
@@ -42,62 +58,31 @@ void setup() {
   Serial.println("with Arduino UNO R3");
 }
 
+void printDist(int distance) {
+  char strBuf[50];
+  sprintf(strBuf, "distance %d", distance);
+  Serial.println(strBuf);
+}
+
 ISR(TIMER2_COMPB_vect) {
   val = val ^ 0XFF;
 
   PORTB = val;
 
 }
+
 void loop() {
-  // Clears the trigPin condition
-//   while (Serial.available() > 0)
-//   {
-//    //Create a place to hold the incoming message
-//    static char message[MAX_MESSAGE_LENGTH];
-//    static unsigned int message_pos = 0;
-
-//    //Read the next available byte in the serial receive buffer
-//    char inByte = Serial.read();
-
-//    //Message coming in (check not terminating character) and guard for over message size
-//    if ( inByte != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1) )
-//    {
-//      //Add the incoming byte to our message
-//      message[message_pos] = inByte;
-//      message_pos++;
-//    }
-//    //Full message received...
-//    else
-//    {
-//      //Add null character to string
-//      message[message_pos] = '\0';
-
-//      //Print the message (or do other things)
-//      Serial.println(message);
-
-//      t = atoi(message);
-//      Serial.println(t);
-
-//      //Reset for the next message
-//      message_pos = 0;
-//    }
-//  }
-  
-//   Timer1.initialize(t); // period 
-  
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
+
+  digitalWrite(trigPin, HIGH); // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
   delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  // Calculating the distance
-  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" cm");
+
+  digitalWrite(trigPin, LOW); // Reads the echoPin, returns the sound wave travel time in microseconds
+  updateRollingAverage(pulseIn(echoPin, HIGH);)
+
+  // Calculate and display the distance
+  distance = rollingAverage() * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  printDist(distance);
 }
 
