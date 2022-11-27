@@ -2,7 +2,7 @@
 //#include <PWM.h>
 
 #define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define trigPin 4 //attach pin D3 Arduino to pin Trig of HC-SR04
+#define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
 
 // DEFINE VARIABLES
 long duration; // variable for the duration of sound wave travel
@@ -19,7 +19,7 @@ int32_t frequency = 40000;
 unsigned char val = 0x00;
 
 
-#define CIRCLE_SIZE 16
+#define CIRCLE_SIZE 1
 uint16_t circleData[CIRCLE_SIZE] = {0};
 uint16_t circlePointer = 0;
 uint32_t circleSum = 0;
@@ -43,8 +43,8 @@ void setup() {
   TCCR2B = (1<<CS21) + (1<<CS20) + (1<<WGM22);
   
   TIMSK2 = (1 << OCIE2B);
-  OCR2A = 5;
-  OCR2B = 2;
+  OCR2A = 50;
+  OCR2B = 25;
   DDRD |= (1<<PD3);
   DDRD |= B11110111;
   DDRB |= B11111111;
@@ -79,10 +79,13 @@ void loop() {
   delayMicroseconds(10);
 
   digitalWrite(trigPin, LOW); // Reads the echoPin, returns the sound wave travel time in microseconds
-  updateRollingAverage(pulseIn(echoPin, HIGH);)
 
   // Calculate and display the distance
-  distance = rollingAverage() * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  distance = pulseIn(echoPin, HIGH) * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+//  if (distance > 255) {
+//    distance = 255;
+//  }
   printDist(distance);
-}
 
+  //  updateRollingAverage(pulseIn(echoPin, HIGH));
+}
