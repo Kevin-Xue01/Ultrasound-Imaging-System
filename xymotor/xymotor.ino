@@ -48,17 +48,6 @@ void trajectory1() {
    }
 }
 
-// Trajectory 2, Y-Main
-void trajectory2() {
-  for (int i = 0; i < x_max; i++) {
-    for (int j = 0; j < y_max; j++) {
-      printCoord(i, i % 2 == 1? y_max - j - 1 : j);
-      step(1, i % 2 == 1);
-    }
-    step(0, 0);
-  }
-}
-
 void reset() {
   for (int i = 0; i < x_max; i++) {
     Serial.println("Stepping x axis, (-) direction");
