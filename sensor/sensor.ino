@@ -73,6 +73,7 @@ ISR(TIMER2_COMPB_vect) {
 
 void loop() {
   delay(7);
+  delayMicroseconds(800);
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
 
