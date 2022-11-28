@@ -35,11 +35,6 @@ def main():
                 print(line)
                 image_size.append(handle_image_size_line(line))
                 if len(image_size) == 2:
-                    for i in range(len(image_size)):
-                        if image_size[i] % 2 == 0:
-                            image_size[i] += 1
-                    # image_size = [1250, 1250]
-                    print(image_size)
                     IMG = np.zeros(tuple(image_size), dtype=np.uint8)
                 counter += 1
 
