@@ -19,7 +19,7 @@ int32_t frequency = 40000;
 unsigned char val = 0x00;
 
 
-#define CIRCLE_SIZE 1
+#define CIRCLE_SIZE 15
 uint16_t circleData[CIRCLE_SIZE] = {0};
 uint16_t circlePointer = 0;
 uint32_t circleSum = 0;
@@ -38,18 +38,18 @@ uint16_t rollingAverage()
 }
 
 void setup() {
-  TCNT2 = 0;
-  TCCR2A = (1<<COM2B1) + (1<<WGM21) + (1<<WGM20);
-  TCCR2B = (1<<CS21) + (1<<CS20) + (1<<WGM22);
-  
-  TIMSK2 = (1 << OCIE2B);
-  OCR2A = 50;
-  OCR2B = 25;
-  DDRD |= (1<<PD3);
-  DDRD |= B11110111;
-  DDRB |= B11111111;
-  DDRD |= PIN6;
-  sei();
+//  TCNT2 = 0;
+//  TCCR2A = (1<<COM2B1) + (1<<WGM21) + (1<<WGM20);
+//  TCCR2B = (1<<CS21) + (1<<CS20) + (1<<WGM22);
+//  
+//  TIMSK2 = (1 << OCIE2B);
+//  OCR2A = 5;
+//  OCR2B = 2;
+//  DDRD |= (1<<PD3);
+//  DDRD |= B11110111;
+//  DDRB |= B11111111;
+//  DDRD |= PIN6;
+//  sei();
   
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
@@ -70,7 +70,7 @@ ISR(TIMER2_COMPB_vect) {
   PORTB = val;
 
 }
-
+float actual = 0.0;
 void loop() {
   delay(7);
   delayMicroseconds(800);
@@ -89,5 +89,9 @@ void loop() {
   }
   printDist(distance);
 
-  //  updateRollingAverage(pulseIn(echoPin, HIGH));
+//    updateRollingAverage(pulseIn(echoPin, HIGH) * 0.034 / 2);
+//
+//    distance = rollingAverage();
+//    actual = ((float)distance - 25.6)/1.59;
+//    printDist(actual);
 }
