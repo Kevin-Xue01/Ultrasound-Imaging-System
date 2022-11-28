@@ -1,11 +1,11 @@
 #include <Stepper.h>
 
 // User variables
-int x_motor_travel_percentage = 90; // percentage of x axis travel 
+int x_motor_travel_percentage = 85; // percentage of x axis travel 
 float x_motor_pixel_percentage = 0.5; // percentage of x_motor_total steps for 1 pixel
 
-int y_motor_travel_percentage = 90; // percentage of x axis travel 
-float y_motor_pixel_percentage = 0.5; // percentage of y_motor_total steps for 1 pixel
+int y_motor_travel_percentage = 85; // percentage of x axis travel 
+float y_motor_pixel_percentage = 1.0; // percentage of y_motor_total steps for 1 pixel
 // System variables
 
 // x motor
@@ -16,9 +16,8 @@ int x_motor_steps_per_revolution = 5760; // check the switches on the controller
 
 int x_motor_max_revolutions = 17; // found by manually rotating x axis lead screw
 
-int x_motor_total_steps = (int)(((float)x_motor_travel_percentage / 100) * 
-  (float)x_motor_steps_per_revolution * (float)x_motor_max_revolutions);
-int x_motor_steps_per_pixel = (int)(x_motor_pixel_percentage / 100 * (float)x_motor_total_steps);
+float x_motor_total_steps = (x_motor_travel_percentage / 100.0) * (float)x_motor_steps_per_revolution * (float)x_motor_max_revolutions;
+long x_motor_steps_per_pixel = (long)((x_motor_pixel_percentage / 100.0) * x_motor_total_steps);
 int x_motor_total_pixels = (int)(100.0 / x_motor_pixel_percentage);
 //int x_motor_new_total_steps = x_motor_steps_per_pixel * x_motor_total_pixels;
 
@@ -34,9 +33,8 @@ int y_motor_max_speed = 15; // rpm
 
 int y_motor_max_revolutions = 24; // found by manually rotating y axis lead screw
 
-int y_motor_total_steps = (int)(((float)y_motor_travel_percentage / 100) * 
-  (float)y_motor_steps_per_revolution * (float)y_motor_max_revolutions);
-int y_motor_steps_per_pixel = (int)(y_motor_pixel_percentage / 100 * (float)y_motor_total_steps);
+float y_motor_total_steps = (y_motor_travel_percentage / 100.0) * (float)y_motor_steps_per_revolution * (float)y_motor_max_revolutions;
+long y_motor_steps_per_pixel = (long)((y_motor_pixel_percentage / 100.0) * y_motor_total_steps);
 int y_motor_total_pixels = (int)(100.0 / y_motor_pixel_percentage);
 //int y_motor_new_total_steps = y_motor_steps_per_pixel * y_motor_total_pixels;
 
@@ -76,9 +74,9 @@ void step(bool ax, bool dir) {
 //  }
 //}
 
-void run_x_motor(int steps, int dir){
+void run_x_motor(long steps, int dir){
   digitalWrite(x_motor_dir_pin, dir);
-  for (int i = 0; i < steps; i++) {
+  for (long i = 0; i < steps; i++) {
     digitalWrite(x_motor_pulse_pin, HIGH);
     delayMicroseconds(50);
     digitalWrite(x_motor_pulse_pin, LOW);
@@ -134,12 +132,6 @@ void printCoord(int x, int y) {
   Serial.println(strBuf);
 }
 
-void printImageSize(){
-  char strBuf[50];
-  sprintf(strBuf, "image_size %d %d", x_motor_total_pixels, y_motor_total_pixels);
-  Serial.println(strBuf);
-}
-
 void setup() {
   Serial.begin(9600);
   YStepper.setSpeed(15);
@@ -148,6 +140,15 @@ void setup() {
 
   Serial.println("Image_Size_X: " + String(x_motor_total_pixels));
   Serial.println("Image_Size_Y: " + String(y_motor_total_pixels));
+
+  
+//  Serial.println(String(x_motor_total_steps)); 
+//  Serial.println(String(x_motor_steps_per_pixel)); 
+//  Serial.println(String(x_motor_total_pixels)); 
+//
+//  Serial.println(String(y_motor_total_steps)); 
+//  Serial.println(String(y_motor_steps_per_pixel)); 
+//  Serial.println(String(y_motor_total_pixels)); 
 
   Serial.println("Starting in 3");
   delay(1000);
@@ -160,8 +161,8 @@ void setup() {
   
   // Before running entire trajectory,
   // reset to Initial Positions First
-//   trajectory1();
-//   reset();
+   trajectory1();
+   reset();
 }
 
 

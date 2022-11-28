@@ -53,7 +53,7 @@ def main():
 
                 IMG[x, y] = dist
                 
-                cv2.imshow("Scan", cv2.resize(IMG, (602, 602), interpolation = cv2.INTER_AREA))
+                cv2.imshow("Scan", cv2.resize(IMG, (max(image_size), max(image_size)), interpolation = cv2.INTER_AREA))
                 cv2.waitKey(1)
                 if (x, y) == (image_size[0]-1, image_size[1]-1):
                     fname = "test.png"
