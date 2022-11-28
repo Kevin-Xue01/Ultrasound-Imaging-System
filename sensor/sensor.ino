@@ -72,6 +72,7 @@ ISR(TIMER2_COMPB_vect) {
 }
 
 void loop() {
+  delay(5);
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
 
@@ -82,9 +83,9 @@ void loop() {
 
   // Calculate and display the distance
   distance = pulseIn(echoPin, HIGH) * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
-//  if (distance > 255) {
-//    distance = 255;
-//  }
+  if (distance > 255) {
+    distance = 255;
+  }
   printDist(distance);
 
   //  updateRollingAverage(pulseIn(echoPin, HIGH));

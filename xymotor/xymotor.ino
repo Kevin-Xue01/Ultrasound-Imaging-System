@@ -1,15 +1,45 @@
 #include <Stepper.h>
 
-//const int stepsPerRevolution = 2038;
-//const int x_max = 15;
-//const int y_max = 25;
+// User variables
+int x_motor_travel_percentage = 90; // percentage of x axis travel 
+float x_motor_pixel_percentage = 0.5; // percentage of x_motor_total steps for 1 pixel
 
-const int x_stepsPerRevolution = 100;
-const int y_stepsPerRevolution = 100;
-const int x_max = 301;
-const int y_max = 301;
+int y_motor_travel_percentage = 90; // percentage of x axis travel 
+float y_motor_pixel_percentage = 0.5; // percentage of y_motor_total steps for 1 pixel
+// System variables
 
-Stepper XStepper = Stepper(2038, 8, 10, 9, 11);
+// x motor
+int x_motor_pulse_pin = 9;
+int x_motor_dir_pin = 8;
+
+int x_motor_steps_per_revolution = 5760; // check the switches on the controller
+
+int x_motor_max_revolutions = 17; // found by manually rotating x axis lead screw
+
+int x_motor_total_steps = (int)(((float)x_motor_travel_percentage / 100) * 
+  (float)x_motor_steps_per_revolution * (float)x_motor_max_revolutions);
+int x_motor_steps_per_pixel = (int)(x_motor_pixel_percentage / 100 * (float)x_motor_total_steps);
+int x_motor_total_pixels = (int)(100.0 / x_motor_pixel_percentage);
+//int x_motor_new_total_steps = x_motor_steps_per_pixel * x_motor_total_pixels;
+
+// y motor
+int y_motor_IN_1_pin = 4;
+int y_motor_IN_2_pin = 5;
+int y_motor_IN_3_pin = 6;
+int y_motor_IN_4_pin = 7;
+
+int y_motor_steps_per_revolution = 2038; // datasheet
+
+int y_motor_max_speed = 15; // rpm
+
+int y_motor_max_revolutions = 24; // found by manually rotating y axis lead screw
+
+int y_motor_total_steps = (int)(((float)y_motor_travel_percentage / 100) * 
+  (float)y_motor_steps_per_revolution * (float)y_motor_max_revolutions);
+int y_motor_steps_per_pixel = (int)(y_motor_pixel_percentage / 100 * (float)y_motor_total_steps);
+int y_motor_total_pixels = (int)(100.0 / y_motor_pixel_percentage);
+//int y_motor_new_total_steps = y_motor_steps_per_pixel * y_motor_total_pixels;
+
 Stepper YStepper = Stepper(2038, 4, 6, 5, 7);
 
 // Takes a step in the axis ax and direction dir
@@ -18,58 +48,83 @@ Stepper YStepper = Stepper(2038, 4, 6, 5, 7);
 void step(bool ax, bool dir) {
   if (dir) {
     if (ax) {
-      YStepper.step(-y_stepsPerRevolution);
+      YStepper.step(-y_motor_steps_per_pixel);
     } else {
-      XStepper.step(-x_stepsPerRevolution);
+      run_x_motor(x_motor_steps_per_pixel, 0);
     }
   } else {
     if (ax) {
-      YStepper.step(y_stepsPerRevolution);
+      YStepper.step(y_motor_steps_per_pixel);
     } else {
-      XStepper.step(x_stepsPerRevolution);
+      run_x_motor(x_motor_steps_per_pixel, 1);
     }
+  }
+}
+//void step(bool ax, bool dir) {
+//  if (dir) {
+//    if (ax) {
+//      YStepper.step(-y_motor_steps_per_revolution);
+//    } else {
+//      run_x_motor(x_motor_steps_per_revolution, 0);
+//    }
+//  } else {
+//    if (ax) {
+//      YStepper.step(y_motor_steps_per_revolution);
+//    } else {
+//      run_x_motor(x_motor_steps_per_revolution, 1);
+//    }
+//  }
+//}
+
+void run_x_motor(int steps, int dir){
+  digitalWrite(x_motor_dir_pin, dir);
+  for (int i = 0; i < steps; i++) {
+    digitalWrite(x_motor_pulse_pin, HIGH);
+    delayMicroseconds(50);
+    digitalWrite(x_motor_pulse_pin, LOW);
+    delayMicroseconds(50);
   }
 }
 
 // Trajectory 1, X-Main
 void trajectory1() {
-  for (int j = 0; j < y_max; j++) {
-     for (int i = 0; i < x_max; i++) {
+  for (int j = 0; j < y_motor_total_pixels; j++) {
+     for (int i = 0; i < x_motor_total_pixels; i++) {
       if (j % 2 == 1) {
         step(0, j % 2 == 1);
-        printCoord(x_max - i - 1, j);
+        printCoord(x_motor_total_pixels - i - 1, j);
       } else {
         printCoord(i, j);
         step(0, j % 2 == 1);
       }
-       
      }
      step(1, 0);
    }
 }
+//
+//void trajectory1() {
+//  for (int j = 0; j < y_motor_max_revolutions; j++) {
+//     for (int i = 0; i < x_motor_max_revolutions; i++) {
+//      if (j % 2 == 1) {
+//        step(0, j % 2 == 1);
+//        printCoord(x_motor_max_revolutions - i - 1, j);
+//      } else {
+//        printCoord(i, j);
+//        step(0, j % 2 == 1);
+//      }
+//     }
+//     step(1, 0);
+//   }
+//}
 
 void reset() {
-  for (int i = 0; i < x_max; i++) {
+  for (int i = 0; i < x_motor_total_pixels; i++) {
     Serial.println("Stepping x axis, (-) direction");
     step(0, 1);
   }
-  for (int j = 0; j < y_max; j++) {
+  for (int j = 0; j < y_motor_total_pixels; j++) {
     Serial.println("Stepping y axis, (-) direction");
     step(1, 1);
-  }
-}
-
-void xLine() {
-  for (int i = 0; i < x_max; i++) {
-    Serial.println("Stepping x axis, (+) direction");
-    step(0, 0);
-  }
-}
-
-void yLine() {
-  for (int j = 0; j < y_max; j++) {
-    Serial.println("Stepping y axis, (+) direction");
-    step(1, 0);
   }
 }
 
@@ -79,10 +134,20 @@ void printCoord(int x, int y) {
   Serial.println(strBuf);
 }
 
+void printImageSize(){
+  char strBuf[50];
+  sprintf(strBuf, "image_size %d %d", x_motor_total_pixels, y_motor_total_pixels);
+  Serial.println(strBuf);
+}
+
 void setup() {
   Serial.begin(9600);
   YStepper.setSpeed(15);
-  XStepper.setSpeed(15);
+  pinMode(x_motor_pulse_pin, OUTPUT);
+  pinMode(x_motor_dir_pin, OUTPUT);
+
+  Serial.println("Image_Size_X: " + String(x_motor_total_pixels));
+  Serial.println("Image_Size_Y: " + String(y_motor_total_pixels));
 
   Serial.println("Starting in 3");
   delay(1000);
@@ -90,12 +155,13 @@ void setup() {
   delay(1000);
   Serial.println("Starting in 1");
   delay(1000);
+  
 
   
   // Before running entire trajectory,
   // reset to Initial Positions First
-   trajectory1();
-   reset();
+//   trajectory1();
+//   reset();
 }
 
 
@@ -104,6 +170,7 @@ void loop() {
 //    Serial.println("Stepping x axis, (+) direction");
 //    step(0, 0);
 
+   
 //    Serial.println("Stpping x axis, (-) direction");
 //    step(0, 1);
 //
