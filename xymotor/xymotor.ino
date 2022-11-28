@@ -1,11 +1,11 @@
 #include <Stepper.h>
 
 // User variables
-int x_motor_travel_percentage = 85; // percentage of x axis travel 
-float x_motor_pixel_percentage = 0.5; // percentage of x_motor_total steps for 1 pixel
+int x_motor_travel_percentage = 95; // percentage of x axis travel 
+float x_motor_pixel_percentage = 0.8; // percentage of x_motor_total steps for 1 pixel
 
-int y_motor_travel_percentage = 85; // percentage of x axis travel 
-float y_motor_pixel_percentage = 1.0; // percentage of y_motor_total steps for 1 pixel
+int y_motor_travel_percentage = 90; // percentage of x axis travel 
+float y_motor_pixel_percentage = 2; // percentage of y_motor_total steps for 1 pixel
 // System variables
 
 // x motor
@@ -16,9 +16,11 @@ int x_motor_steps_per_revolution = 5760; // check the switches on the controller
 
 int x_motor_max_revolutions = 17; // found by manually rotating x axis lead screw
 
+
 float x_motor_total_steps = (x_motor_travel_percentage / 100.0) * (float)x_motor_steps_per_revolution * (float)x_motor_max_revolutions;
 long x_motor_steps_per_pixel = (long)((x_motor_pixel_percentage / 100.0) * x_motor_total_steps);
 int x_motor_total_pixels = (int)(100.0 / x_motor_pixel_percentage);
+
 //int x_motor_new_total_steps = x_motor_steps_per_pixel * x_motor_total_pixels;
 
 // y motor
@@ -78,9 +80,9 @@ void run_x_motor(long steps, int dir){
   digitalWrite(x_motor_dir_pin, dir);
   for (long i = 0; i < steps; i++) {
     digitalWrite(x_motor_pulse_pin, HIGH);
-    delayMicroseconds(50);
+    delayMicroseconds(33);
     digitalWrite(x_motor_pulse_pin, LOW);
-    delayMicroseconds(50);
+    delayMicroseconds(33);
   }
 }
 
@@ -162,7 +164,7 @@ void setup() {
   // Before running entire trajectory,
   // reset to Initial Positions First
    trajectory1();
-   reset();
+//   reset();
 }
 
 

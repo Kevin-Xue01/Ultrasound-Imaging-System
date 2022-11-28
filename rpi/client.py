@@ -3,17 +3,8 @@ from PIL import Image
 import serial
 import cv2
 
-MOTOR_INO = 'COM10'
-PIEZO_INO = 'COM11'
-
-def nothing(x):
-    pass
-
-# cv2.namedWindow("Trackbar")
-# cv2.resizeWindow("Trackbar", 500, 60)  # width, height
-# cv2.createTrackbar(
-#     "Threshold", "Trackbar", 50, 255, nothing
-# )
+MOTOR_INO = 'COM14'
+PIEZO_INO = 'COM8'
 
 def handle_image_size_line(line):
     return int(line.split(" ")[1])
@@ -48,7 +39,7 @@ def main():
 
                 IMG[x, y] = dist
                 
-                cv2.imshow("Scan", cv2.resize(IMG, (max(image_size), max(image_size)), interpolation = cv2.INTER_AREA))
+                cv2.imshow("Scan", cv2.resize(IMG, (2*max(image_size), 2*max(image_size)), interpolation = cv2.INTER_AREA))
                 cv2.waitKey(1)
                 if (x, y) == (image_size[0]-1, image_size[1]-1):
                     fname = "test.png"
