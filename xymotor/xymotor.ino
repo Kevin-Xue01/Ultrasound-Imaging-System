@@ -1,11 +1,11 @@
 #include <Stepper.h>
 
 // User variables
-int x_motor_travel_percentage = 95; // percentage of x axis travel 
-float x_motor_pixel_percentage = 0.8; // percentage of x_motor_total steps for 1 pixel
+int x_motor_travel_percentage = 97; // percentage of x axis travel 
+float x_motor_pixel_percentage = 0.7; // percentage of x_motor_total steps for 1 pixel
 
-int y_motor_travel_percentage = 90; // percentage of x axis travel 
-float y_motor_pixel_percentage = 2.5; // percentage of y_motor_total steps for 1 pixel
+int y_motor_travel_percentage = 88; // percentage of x axis travel 
+float y_motor_pixel_percentage = 2; // percentage of y_motor_total steps for 1 pixel
 // System variables
 
 // x motor
@@ -163,7 +163,7 @@ void setup() {
   
   // Before running entire trajectory,
   // reset to Initial Positions First
-   trajectory1();
+//   trajectory1();
 //   reset();
 }
 
