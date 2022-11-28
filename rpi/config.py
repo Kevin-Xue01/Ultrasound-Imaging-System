@@ -8,10 +8,10 @@ def main():
     cv2.namedWindow("Trackbar")
     cv2.resizeWindow("Trackbar", 800, 200)  # width, height
     cv2.createTrackbar(
-        "Width", "Trackbar", 10, 1000, nothing
+        "Width", "Trackbar", 20, 1000, nothing
     )
     cv2.createTrackbar(
-        "Height", "Trackbar", 10, 1000, nothing
+        "Height", "Trackbar", 20, 1000, nothing
     )
 
     img = cv2.imread(PATH)
@@ -28,6 +28,8 @@ def main():
         height = cv2.getTrackbarPos(
             "Height", "Trackbar"
         )
+        print(width)
+        print(height)
         cv2.imshow("Scan", cv2.resize(img, (width, height), interpolation = cv2.INTER_AREA))
 
 if __name__ == "__main__":
