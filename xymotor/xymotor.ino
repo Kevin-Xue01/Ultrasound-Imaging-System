@@ -5,7 +5,7 @@ int x_motor_travel_percentage = 102; // percentage of x axis travel
 float x_motor_pixel_percentage = 0.8; // percentage of x_motor_total steps for 1 pixel
 
 int y_motor_travel_percentage = 97; // percentage of x axis travel 
-float y_motor_pixel_percentage = 2.1; // percentage of y_motor_total steps for 1 pixel
+float y_motor_pixel_percentage = 2.2; // percentage of y_motor_total steps for 1 pixel
 // System variables
 
 // x motor
@@ -163,7 +163,7 @@ void setup() {
   
   // Before running entire trajectory,
   // reset to Initial Positions First
-   trajectory1();
+//   trajectory1();
 }
 
 
@@ -180,6 +180,6 @@ void loop() {
 //    step(1, 0);
 
 //    Serial.println("Stepping y axis, (-) direction");
-//    step(1, 1);
+    step(1, 1);
 
 }

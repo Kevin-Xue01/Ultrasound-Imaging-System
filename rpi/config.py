@@ -3,8 +3,8 @@ import cv2
 def nothing(x):
     pass
 
-name = "rock"
-n = 2
+name = "paper"
+n = 7
 
 PATH = f'../data/{name}_{n}/test.png'
 NEW_PATH = f"../data/{name}_{n}/new_image.png"
@@ -27,10 +27,11 @@ def main():
     print(img.dtype)
     width = 630
     height = 400
+    threshold = 0
     print(img.shape)
     while True:
         if cv2.waitKey(1) == ord("q"):  # press q to terminate program
-            cv2.imwrite(NEW_PATH, cv2.resize(img, (width, height), interpolation = cv2.INTER_AREA))
+            cv2.imwrite(NEW_PATH, cv2.threshold(cv2.resize(img, (width, height), interpolation = cv2.INTER_AREA), threshold, 255, cv2.THRESH_BINARY)[1])
             break
         width = cv2.getTrackbarPos(
             "Width", "Trackbar"
