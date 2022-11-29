@@ -163,7 +163,7 @@ void setup() {
   
   // Before running entire trajectory,
   // reset to Initial Positions First
-//   trajectory1();
+   trajectory1();
 }
 
 
@@ -180,6 +180,6 @@ void loop() {
 //    step(1, 0);
 
 //    Serial.println("Stepping y axis, (-) direction");
-    step(1, 1);
+//    step(1, 1);
 
 }
