@@ -3,8 +3,8 @@ import cv2
 def nothing(x):
     pass
 
-name = "paper"
-n = 6
+name = "rock"
+n = 2
 
 PATH = f'../data/{name}_{n}/test.png'
 NEW_PATH = f"../data/{name}_{n}/new_image.png"
