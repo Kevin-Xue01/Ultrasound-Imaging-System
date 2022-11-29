@@ -3,8 +3,8 @@ import cv2
 def nothing(x):
     pass
 
-name = "scissors"
-n = 4
+name = "paper"
+n = 6
 
 PATH = f'../data/{name}_{n}/test.png'
 NEW_PATH = f"../data/{name}_{n}/new_image.png"
@@ -17,11 +17,14 @@ def main():
     cv2.createTrackbar(
         "Height", "Trackbar", 400, 1000, nothing
     )
+    cv2.createTrackbar(
+        "Threshold", "Trackbar", 0, 255, nothing
+    )
 
     img = cv2.imread(PATH)
     img = cv2.bitwise_not(img)
     img = cv2.applyColorMap(img, cv2.COLORMAP_OCEAN)
-
+    print(img.dtype)
     width = 630
     height = 400
     print(img.shape)
@@ -35,9 +38,10 @@ def main():
         height = cv2.getTrackbarPos(
             "Height", "Trackbar"
         )
-        print(width)
-        print(height)
-        cv2.imshow("Scan", cv2.resize(img, (width, height), interpolation = cv2.INTER_AREA))
-
+        threshold = cv2.getTrackbarPos(
+            "Threshold", "Trackbar"
+        )
+        cv2.imshow("Scan", cv2.threshold(cv2.resize(img, (width, height), interpolation = cv2.INTER_AREA), threshold, 255, cv2.THRESH_BINARY)[1])
+        
 if __name__ == "__main__":
     main()
