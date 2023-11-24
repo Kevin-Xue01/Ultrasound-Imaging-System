@@ -3,6 +3,7 @@ from PIL import Image
 import serial
 import cv2
 
+
 MOTOR_INO = 'COM14'
 PIEZO_INO = 'COM8'
 
